@@ -27,9 +27,9 @@ Setup does not provide following features and
 ## Setup infrastrucutre
 ### Install dependencies
 Requires following programs to be installed
-* terraform
-* docker
-* aws cli
+* terraform (version `0.12.16`)
+* aws cli (version `1.15.58`)
+* docker (version `19.03.8`)
 
 ### AWS credentials
 Store your AWS credentials in environment variables or aws credentials file which is usually located at `~/.aws/credentials`
