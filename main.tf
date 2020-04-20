@@ -22,7 +22,6 @@ module "vpc" {
   private_subnets = ["10.1.1.0/24", "10.1.2.0/24"]
   public_subnets  = ["10.1.11.0/24", "10.1.12.0/24"]
 
-  #enable_nat_gateway = false # this is faster, but should be "true" for real
   enable_nat_gateway = true
   single_nat_gateway = true
 
@@ -66,7 +65,6 @@ module "alb" {
   }
 }
 
-
 #----- ECS --------
 module "ecs" {
   source = "terraform-aws-modules/ecs/aws"
@@ -83,6 +81,7 @@ module "ec2-profile" {
 module "ads-app" {
   source     = "./modules/ads-app"
   cluster_id = module.ecs.this_ecs_cluster_id
+  target_group_arn = element(module.alb.target_group_arns, 0)
 }
 
 #----- ECS  Resources--------
@@ -119,9 +118,6 @@ module "autoscaling" {
   security_groups      = [module.vpc.default_security_group_id]
   iam_instance_profile = module.ec2-profile.this_iam_instance_profile_id
   user_data            = data.template_file.user_data.rendered
-
-  #load_balancers = [module.alb.this_lb_id]
-  target_group_arns = module.alb.target_group_arns
 
   # Auto scaling group
   asg_name                  = local.ec2_resources_name
@@ -169,5 +165,9 @@ data "template_file" "user_data" {
 }
 
 output "lb_dns_name" {
-  value = "${module.alb.this_lb_dns_name}"
+  value = module.alb.this_lb_dns_name
+}
+
+output "ecr_repository_url" {
+  value = module.ads-app.ecr_repository_url
 }

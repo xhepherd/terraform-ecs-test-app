@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "ads_app" {
 [
   {
     "name": "ads_app",
-    "image": "179328159724.dkr.ecr.us-east-1.amazonaws.com/ads_app:v0.2",
+    "image": "179328159724.dkr.ecr.us-east-1.amazonaws.com/ads_app:latest",
     "cpu": 0,
     "memory": 128,
     "portMappings": [
@@ -43,6 +43,13 @@ EOF
 
 resource "aws_ecs_service" "ads_app" {
   name = "ads_app"
+
+  load_balancer {
+    target_group_arn = var.target_group_arn
+    container_name   = "ads_app"
+    container_port   = 80
+  }
+
   cluster = var.cluster_id
   task_definition = aws_ecs_task_definition.ads_app.arn
 
@@ -52,3 +59,6 @@ resource "aws_ecs_service" "ads_app" {
   deployment_minimum_healthy_percent = 0
 }
 
+output "ecr_repository_url" {
+  value = aws_ecr_repository.ads_app.repository_url
+}
