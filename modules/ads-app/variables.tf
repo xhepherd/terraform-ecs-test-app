@@ -6,7 +6,7 @@ variable "name" {
 variable "awslogs_retention_days" {
   description = "AWS Cloudwatch region where to store container logs"
   type        = string
-  default = 1
+  default     = 1
 }
 
 variable "awslogs_region" {

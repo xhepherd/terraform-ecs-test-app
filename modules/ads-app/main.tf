@@ -4,7 +4,7 @@ resource "aws_cloudwatch_log_group" "ads_app" {
 }
 
 resource "aws_ecr_repository" "ads_app" {
-  name = var.name
+  name                 = var.name
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -50,11 +50,11 @@ resource "aws_ecs_service" "ads_app" {
     container_port   = var.container_port
   }
 
-  cluster = var.cluster_id
+  cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.ads_app.arn
 
   desired_count = 1
 
-  deployment_maximum_percent = 100
+  deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0
 }
