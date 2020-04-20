@@ -31,15 +31,15 @@ module "vpc" {
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "${var.app_name}-alb"
 
   load_balancer_type = "application"
 
-  vpc_id             = module.vpc.vpc_id
-  subnets            = module.vpc.public_subnets
-  security_groups    = [module.vpc.default_security_group_id]
-  
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.vpc.public_subnets
+  security_groups = [module.vpc.default_security_group_id]
+
   target_groups = [
     {
       name_prefix      = "dev"
@@ -76,14 +76,14 @@ module "ec2-profile" {
 #----- ECS  Services--------
 
 module "ads-app" {
-  name = var.app_name
-  source     = "./modules/ads-app"
+  name                   = var.app_name
+  source                 = "./modules/ads-app"
   awslogs_retention_days = var.awslogs_retention_days
-  awslogs_region = var.region
-  container_port = var.backend_port
-  host_port = var.backend_port
-  cluster_id = module.ecs.this_ecs_cluster_id
-  target_group_arn = element(module.alb.target_group_arns, 0)
+  awslogs_region         = var.region
+  container_port         = var.backend_port
+  host_port              = var.backend_port
+  cluster_id             = module.ecs.this_ecs_cluster_id
+  target_group_arn       = element(module.alb.target_group_arns, 0)
 }
 
 #----- ECS  Resources--------
@@ -145,16 +145,16 @@ module "autoscaling" {
 }
 
 resource "aws_security_group_rule" "alb_to_ecs" {
-  type                     = "ingress"
-  from_port                = var.backend_port
-  to_port                  = var.backend_port
-  protocol                 = "TCP"
-  cidr_blocks              = ["0.0.0.0/0"]
-  security_group_id        = module.vpc.default_security_group_id
+  type              = "ingress"
+  from_port         = var.backend_port
+  to_port           = var.backend_port
+  protocol          = "TCP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.vpc.default_security_group_id
 }
 
 resource "aws_key_pair" "ecs_key" {
-  key_name = "${var.app_name}-key"
+  key_name   = "${var.app_name}-key"
   public_key = file(var.public_key_path)
 }
 

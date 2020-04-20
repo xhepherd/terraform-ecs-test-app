@@ -7,7 +7,7 @@ variable "min_size" {}
 variable "desired_capacity" {}
 variable "instance_type" {}
 variable "health_check_type" {
-	default = "EC2"
+  default = "EC2"
 }
 
 variable "private_subnet_cidrs" {
@@ -23,7 +23,7 @@ variable "availability_zones" {
 }
 
 variable "public_key_path" {
-	default = "~/.ssh/id_rsa.pub"
+  default = "~/.ssh/id_rsa.pub"
 }
 
 variable "backend_port" {
