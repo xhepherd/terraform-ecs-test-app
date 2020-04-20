@@ -1,0 +1,17 @@
+{
+  "family": "ads-app",
+  "containerDefinitions": [
+    {
+      "name": "ads-app",
+      "image": "179328159724.dkr.ecr.us-east-1.amazonaws.com/ads-app:@VERSION@",
+      "memory": 128,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ]    
+    }
+  ]
+}

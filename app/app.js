@@ -2,7 +2,7 @@ var http = require('http');
 var os = require('os');
 
 var port = 80;
-var version = '0.1'; // for test purpose
+var version = '0.6'; // for test purpose
 
 var server = http.createServer(function (req, res) {
   if (req.method == 'GET' && req.url === '/') {

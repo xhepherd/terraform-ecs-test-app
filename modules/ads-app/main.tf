@@ -1,10 +1,10 @@
 resource "aws_cloudwatch_log_group" "ads_app" {
-  name              = "ads_app"
-  retention_in_days = 1
+  name              = var.name
+  retention_in_days = var.awslogs_retention_days
 }
 
 resource "aws_ecr_repository" "ads_app" {
-  name = "ads_app"
+  name = var.name
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -13,27 +13,27 @@ resource "aws_ecr_repository" "ads_app" {
 }
 
 resource "aws_ecs_task_definition" "ads_app" {
-  family = "ads_app"
+  family = var.name
 
   container_definitions = <<EOF
 [
   {
-    "name": "ads_app",
-    "image": "179328159724.dkr.ecr.us-east-1.amazonaws.com/ads_app:latest",
+    "name": "${var.name}",
+    "image": "${aws_ecr_repository.ads_app.repository_url}:latest",
     "cpu": 0,
     "memory": 128,
     "portMappings": [
         {
-          "containerPort": 80,
-          "hostPort": 80,
+          "containerPort": ${var.container_port},
+          "hostPort": ${var.host_port},
           "protocol": "tcp"
         }
     ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "ads_app",
-        "awslogs-region": "us-east-1"
+        "awslogs-group": "${var.name}",
+        "awslogs-region": "${var.awslogs_region}"
       }
     }
   }
@@ -42,12 +42,12 @@ EOF
 }
 
 resource "aws_ecs_service" "ads_app" {
-  name = "ads_app"
+  name = var.name
 
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "ads_app"
-    container_port   = 80
+    container_name   = var.name
+    container_port   = var.container_port
   }
 
   cluster = var.cluster_id
@@ -57,8 +57,4 @@ resource "aws_ecs_service" "ads_app" {
 
   deployment_maximum_percent = 100
   deployment_minimum_healthy_percent = 0
-}
-
-output "ecr_repository_url" {
-  value = aws_ecr_repository.ads_app.repository_url
 }
