@@ -10,26 +10,26 @@ The app is containerized and deployed in AWS ECS.
 Service infrastrucute is built using Terraform and majority infrastructure components are build using Terraform modules by [Terrafom AWS Modules](https://github.com/terraform-aws-modules)
 
 ### Features provided by setup
-1. Creates ECS instances cluster in a new VPC based on the latest official Amazon ECS AMI (docker 1.12 support)
+1. Creates ECS instances cluster in a new VPC based on the latest official Amazon ECS AMI
 1. Creates IAM instance roles to enable access to EC2, CloudWatch, ECS,  and Autoscaling services for the ECS container instances.
-1. Creates ECS task and service for ads-app micro service application (nodejs-app)
-1. The resulting service is accessible via internet-facing ALB's DNS. 
+1. Creates ECS task and service for ads-app micro service application
 1. Provides service level load balancing via ALB (single access point for the service)
-1. Provides fault-tolerance and self-healing; failed ECS cluster instance will be removed from it's Autoscaling group and new one launched to replace it
+1. The resulting service is accessible via internet-facing ALB's DNS.
 
 ### If had more time (TODO)
 Setup does not provide following features and  
 1. Auto-scaling on ECS instances cluster and ECS service level (cpu and memory based triggered by Cloudwatch)
 1. R53 Hosted zone setup, and creating ALB DNS record in new hosted zone.
 1. ACM SSL certificate and integration with ALB
+1. Fix latest version deployment without force deployment
 1. CI/CD pipline setup
 
 ## Setup infrastrucutre
 ### Install dependencies
 Requires following programs to be installed
 * terraform (version `0.12.16`)
-* aws cli (version `1.15.58`)
-* docker (version `19.03.8`)
+* aws cli (`v2`)
+* docker  (`1.19`)
 
 ### AWS credentials
 Store your AWS credentials in environment variables or aws credentials file which is usually located at `~/.aws/credentials`
@@ -78,8 +78,8 @@ cd ../deployment
 CONTAINER_VERSION=0.1 sh deploy.sh
 ```
 **Note:**
-1. Deployment script may require you to install `jq`
-1. If new version is not updated by ECS service, uncomment last line in `deploy.sh` to force deploy new version. (to be investigated)
+1. Deployment script may require you to install `jq` if not preinstalled
+1. If ECS service does not update task definition with new image, uncomment last line in `deploy.sh` to force deploy new version. (to be investigated)
 
 ## Destroy setup
 ```
