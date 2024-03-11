@@ -1,4 +1,4 @@
-# ECS based Ads service
+# ECS based Ads service (INCOMPLETE)
 
 This is a simple NodeJS Ads service application with following endpoints
 
@@ -85,3 +85,5 @@ CONTAINER_VERSION=0.1 sh deploy.sh
 ```
 terraform destroy
 ```
+
+Note: This was written as Terraform trial project. Use it on your own risk.
